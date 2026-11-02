@@ -151,6 +151,127 @@
   .btn-go-upload { background: var(--accent-lime); color: #121c15; font-weight: 800; font-size: 0.85rem; padding: 12px 24px; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
   .btn-go-upload:hover { transform: translateY(-2px); }
 
+  /* ===== PAGE 4: SETTINGS (SESUAI GAMBAR) ===== */
+  .settings-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; margin-bottom: 20px; }
+  .settings-card.oauth-card { border-color: #2a4a35; background: linear-gradient(180deg, #111a14 0%, #151917 100%); }
+  .settings-card.connected-card { border-color: #2a4a35; }
+  
+  .settings-title { font-size: 0.95rem; font-weight: 700; color: white; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;}
+  .settings-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
+  
+  .btn-connect-roblox { background: transparent; border: 1px solid #3b4b41; color: white; font-weight: 700; font-size: 0.85rem; padding: 12px 20px; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: 0.2s; }
+  .btn-connect-roblox:hover { background: rgba(255,255,255,0.05); }
+  .btn-connect-roblox svg { width: 18px; height: 18px; fill: white; }
+  
+  .status-connected { font-size: 0.8rem; color: #4ade80; margin-top: 16px; display: flex; align-items: center; gap: 6px; }
+  .status-connected::before { content: ''; width: 8px; height: 8px; background: #4ade80; border-radius: 50%; }
+
+  .connection-status-box { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 24px; }
+  .connection-status-box .dot { width: 10px; height: 10px; background: #4ade80; border-radius: 50%; margin-top: 4px; box-shadow: 0 0 10px rgba(74, 222, 128, 0.5); }
+  .connection-status-box .text-main { font-size: 0.9rem; font-weight: 700; color: white; margin-bottom: 4px; }
+  .connection-status-box .text-sub { font-size: 0.75rem; color: var(--text-muted); }
+
+  .input-group { margin-bottom: 20px; }
+  .input-label { display: block; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  .input-field { width: 100%; background: var(--bg-input); border: 1px solid #3b4b41; border-radius: 12px; padding: 16px; color: white; font-size: 0.9rem; outline: none; transition: 0.2s;}
+  .input-field:focus { border-color: var(--accent-lime); }
+  .input-field::placeholder { color: #555; }
+  .input-help { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; margin-top: 8px; }
+  .input-help span { color: var(--accent-lime); }
+
+  .select-field { width: 100%; background: var(--bg-input); border: 1px solid #3b4b41; border-radius: 12px; padding: 16px; color: white; font-size: 0.9rem; outline: none; appearance: none; cursor: pointer; }
+  .select-field:focus { border-color: var(--accent-lime); }
+
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+  .btn-save { background: white; color: black; font-weight: 800; font-size: 0.85rem; padding: 12px 24px; border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; flex: 1; justify-content: center; transition: 0.2s; }
+  .btn-save:hover { background: var(--accent-lime); }
+  .btn-test { background: transparent; border: 1px solid #3b4b41; color: white; font-weight: 700; font-size: 0.85rem; padding: 12px 24px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; flex: 1; justify-content: center; transition: 0.2s; }
+  .btn-test:hover { background: rgba(255,255,255,0.05); }
+  .btn-delete { background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.3); color: #f87171; font-weight: 700; font-size: 0.85rem; padding: 12px 24px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; justify-content: center; transition: 0.2s; }
+  .btn-delete:hover { background: rgba(220, 53, 69, 0.2); }
+  
+  .steps-list { list-style: none; padding: 0; margin: 0; }
+  .steps-list li { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; display: flex; gap: 8px; line-height: 1.5; }
+  .steps-list li strong { color: white; }
+</style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash"><div class="splash-text" id="splash-text">CELLO STUDIO</div></div>
+
+<!-- KONTEN UTAMA -->
+<div id="main-content">
+  <nav>
+    <div class="brand">CELLO<span style="color:var(--accent-lime)">.</span></div>
+    <div class="nav-right">
+      <div class="nav-profile">C</div>
+      <button class="menu-btn" type="button" onclick="toggleMenu()">☰</button>
+      
+      <!-- DROPDOWN MENU -->
+      <div class="dropdown" id="dropdownMenu">
+        <div class="dropdown-item active" onclick="switchPage('home')">🏠 Home</div>
+        <div class="dropdown-item" onclick="switchPage('library')">📚 Library</div>
+        <div class="dropdown-item" onclick="switchPage('upload')">🎵 Upload Music</div>
+        <div class="dropdown-item" onclick="switchPage('settings')">⚙️ Settings</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    
+    <!-- ================= PAGE 1: HOME ================= -->
+    <div id="page-home" class="page-section active">
+      
+      <div class="breadcrumb">
+        <span style="font-weight:400;">WORKSPACE</span> / <span>OVERVIEW</span>
+      </div>
+
+      <div class="hero-banner">
+        <div class="hero-badge">CELLO / ROBLOX AUDIO STUDIO</div>
+        <div class="hero-title">Cello</div>
+        <p class="hero-desc">Satu studio untuk menyiapkan suara, lalu membawanya ke dunia Roblox.</p>
+        <div class="hero-buttons">
+          <button class="btn-primary" type="button" onclick="switchPage('upload')">⬆ Upload Audio</button>
+          <buion: column; align-items: center; }
+  .dropzone:hover { border-color: var(--accent-lime); background: rgba(203, 240, 126, 0.02); }
+  .drop-icon { width: 48px; height: 48px; background: rgba(42, 90, 60, 0.5); border: 1px solid #2a5a3c; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--accent-lime); margin-bottom: 16px; }
+  .drop-text { font-size: 1rem; font-weight: 700; color: white; margin-bottom: 4px; }
+  .drop-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; }
+  .format-tags { display: flex; gap: 8px; justify-content: center; }
+  .format-tag { font-size: 0.7rem; border: 1px solid #3b4b41; padding: 4px 10px; border-radius: 20px; color: var(--text-muted); }
+  .url-area { display: none; }
+  .url-input-box { width: 100%; background: var(--bg-input); border: 1px solid #3b4b41; border-radius: 12px; padding: 16px; color: white; font-size: 0.9rem; outline: none; resize: none; min-height: 100px; margin-bottom: 12px; font-family: inherit; }
+  .url-input-box:focus { border-color: var(--accent-lime); }
+  .url-help { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+  .btn-convert { background: white; color: black; font-weight: 700; padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; float: right; margin-bottom: 10px; }
+  .speed-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 24px; }
+  @media (max-width: 400px) { .speed-grid { grid-template-columns: repeat(3, 1fr); } }
+  .speed-btn { background: var(--bg-input); border: 1px solid #3b4b41; color: white; padding: 12px 0; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+  .speed-btn.active { background: white; color: black; border-color: white; }
+  .asset-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-top: 8px; }
+  .btn-publish-large { width: 100%; background: #4a5c50; color: #a0b0a7; font-weight: 800; padding: 18px; border-radius: 12px; border: none; font-size: 1rem; cursor: not-allowed; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; transition: 0.2s; }
+  .btn-publish-large.ready { background: var(--accent-lime); color: #121c15; cursor: pointer; }
+  .btn-publish-large.ready:hover { transform: translateY(-2px); }
+  .btn-clear { width: 100%; background: transparent; border: 1px solid var(--border-color); color: var(--text-main); font-weight: 700; padding: 16px; border-radius: 12px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-clear:hover { background: var(--bg-card); }
+
+  /* ===== PAGE 3: LIBRARY ===== */
+  .library-header { margin-bottom: 24px; }
+  .library-title { font-size: 2rem; font-weight: 800; color: white; margin-bottom: 4px; display: flex; align-items: center; gap: 12px; }
+  .library-badge { font-size: 0.7rem; background: var(--bg-card); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 20px; font-weight: 700; color: var(--text-muted); letter-spacing: 1px; }
+  .library-search-box { position: relative; margin-bottom: 24px; }
+  .library-search-box input { width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px 16px 16px 48px; color: white; font-size: 0.9rem; outline: none; }
+  .library-search-box input:focus { border-color: var(--accent-lime); }
+  .library-search-box::before { content: '🔍'; position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; opacity: 0.5; }
+  
+  .library-empty { background: var(--bg-card); border: 1px dashed var(--border-color); border-radius: 20px; padding: 60px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; }
+  .library-empty-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+  .library-empty-title { font-size: 1.2rem; font-weight: 700; color: white; margin-bottom: 8px; }
+  .library-empty-desc { font-size: 0.85rem; color: var(--text-muted); max-width: 300px; line-height: 1.5; margin-bottom: 24px; }
+  .btn-go-upload { background: var(--accent-lime); color: #121c15; font-weight: 800; font-size: 0.85rem; padding: 12px 24px; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+  .btn-go-upload:hover { transform: translateY(-2px); }
+
   /* ===== PAGE 4: SETTINGS (TAMBAHAN BARU) ===== */
   .settings-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; margin-bottom: 20px; }
   .settings-card.oauth-card { border-color: #2a4a35; background: linear-gradient(180deg, #111a14 0%, #151917 100%); }
