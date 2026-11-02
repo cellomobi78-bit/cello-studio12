@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CELLO STUDIO</title>
+<style>
+  /* ===== GLOBAL & VARIABEL ===== */
+  :root {
+    --bg-dark: #0d110f;
+    --bg-card: #151917;
+    --bg-input: #0a0d0b;
+    --text-main: #e2e8e4;
+    --text-muted: #8b9e93;
+    --accent-lime: #cbf07e;
+    --border-color: #2a332e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
+  body { background-color: var(--bg-dark); color: var(--text-main); padding-bottom: 60px; overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+
+  /* ===== SPLASH SCREEN ===== */
+  #splash { position: fixed; inset: 0; background: #050805; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.6s ease, visibility 0.6s; }
+  #splash.hidden { opacity: 0; visibility: hidden; }
+  .splash-text { font-size: 2.8rem; font-weight: 900; letter-spacing: 6px; color: white; text-shadow: 0 0 10px rgba(203, 240, 126, 0.5); animation: glitchIn 0.5s both; }
+  @keyframes glitchIn { 0% { transform: scale(0.8); opacity: 0; filter: blur(10px); } 50% { transform: scale(1.1); opacity: 1; filter: blur(0); text-shadow: 2px 0 red, -2px 0 blue; } 100% { transform: scale(1); opacity: 1; text-shadow: 0 0 20px rgba(203, 240, 126, 0.8); } }
+  .splash-text.move-up-left { animation: none; transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55); transform: translate(-35vw, -42vh) scale(0.15); opacity: 0; }
+
+  /* ===== KONTEN UTAMA ===== */
+  #main-content { opacity: 0; transition: opacity 0.5s ease; }
+  #main-content.show { opacity: 1; }
+
+  /* ===== NAVBAR ===== */
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background-color: var(--bg-dark); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+  .brand { font-weight: 900; font-size: 1.4rem; color: white; }
+  .nav-right { display: flex; align-items: center; gap: 12px; position: relative; }
+  .nav-profile { width: 36px; height: 36px; border-radius: 50%; background: #d92662; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; cursor: pointer; }
+  .menu-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: white; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+
+  /* ===== DROPDOWN MENU ===== */
+  .dropdown { position: absolute; top: 50px; right: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; width: 200px; padding: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: none; flex-direction: column; z-index: 200; }
+  .dropdown.active { display: flex; animation: fadeIn 0.2s ease; }
+  .dropdown-item { padding: 12px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; display: flex; gap: 10px; }
+  .dropdown-item:hover, .dropdown-item.active { background: rgba(203, 240, 126, 0.1); color: var(--accent-lime); }
+
+  /* ===== CONTAINER & HALAMAN ===== */
+  .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+  .page-section { display: none; animation: fadeIn 0.3s ease; }
+  .page-section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== PAGE 1: HOME ===== */
+  .breadcrumb { font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .breadcrumb span { color: white; }
+  
+  .hero-banner { background: linear-gradient(135deg, #121c15 0%, #0c120e 100%); border: 1px solid #2a3a30; border-radius: 20px; padding: 30px 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(203, 240, 126, 0.1); border: 1px solid rgba(203, 240, 126, 0.3); padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; color: var(--accent-lime); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; background-color: var(--accent-lime); border-radius: 50%; }
+  .hero-title { font-size: 3.5rem; font-weight: 900; color: white; margin-bottom: 12px; line-height: 1; }
+  .hero-desc { font-size: 0.9rem; color: var(--text-muted); max-width: 350px; margin-bottom: 24px; line-height: 1.5; }
+  .hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary { background-color: var(--accent-lime); color: #121c15; font-weight: 800; font-size: 0.85rem; padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-outline { background: transparent; border: 1px solid var(--border-color); color: white; font-weight: 600; font-size: 0.85rem; padding: 12px 20px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+  .stat-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; }
+  .stat-icon { width: 28px; height: 28px; background-color: rgba(203, 240, 126, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--accent-lime); margin-bottom: 12px; font-size: 0.9rem; }
+  .stat-value { font-size: 1.6rem; font-weight: 800; color: white; line-height: 1.1; }
+  .stat-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;}
+
+  .section-header { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;}
+  .section-title { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px; }
+  .section-link { font-size: 0.75rem; color: var(--text-muted); cursor: pointer; }
+  
+  .split-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 12px; margin-bottom: 24px; }
+  @media (max-width: 600px) { .split-grid { grid-template-columns: 1fr; } }
+
+  .activity-list { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; }
+  .act-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #1e2521; }
+  .act-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .act-item:first-child { padding-top: 0; }
+  .act-info { display: flex; align-items: center; gap: 12px; }
+  .act-icon { width: 32px; height: 32px; background-color: #1c2520; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+  .act-name { font-size: 0.8rem; font-weight: 600; color: white; margin-bottom: 2px; max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .act-meta { font-size: 0.65rem; color: var(--text-muted); }
+  .badge-status { font-size: 0.65rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; }
+  .status-fail { background-color: rgba(220, 53, 69, 0.15); color: #f87171; }
+  .status-ok { background-color: rgba(203, 240, 126, 0.15); color: var(--accent-lime); }
+
+  .plan-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
+  .plan-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .plan-title { font-size: 1.3rem; font-weight: 800; color: white; margin-bottom: 4px; transition: 0.3s; }
+  .plan-desc { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 16px; }
+  .btn-upgrade { background-color: white; color: black; font-weight: 800; font-size: 0.75rem; padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; align-self: flex-start; transition: 0.2s; }
+  .btn-upgrade:hover { background-color: var(--accent-lime); }
+
+  .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tool-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; cursor: pointer; transition: 0.2s; }
+  .tool-card:hover { border-color: var(--accent-lime); }
+  .tool-icon { font-size: 1.2rem; color: var(--accent-lime); margin-bottom: 12px; }
+  .tool-title { font-size: 0.85rem; font-weight: 700; color: white; margin-bottom: 4px; }
+  .tool-desc { font-size: 0.7rem; color: var(--text-muted); }
+
+  /* ===== PAGE 2: UPLOAD SOUND ===== */
+  .page-header { margin-bottom: 20px; }
+  .page-title { font-size: 2rem; font-weight: 800; color: white; margin-bottom: 6px; }
+  .page-sub { font-size: 0.9rem; color: var(--text-muted); }
+  .tabs-container { display: flex; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 12px; padding: 4px; margin-bottom: 20px; }
+  .tab { flex: 1; padding: 14px; border: none; background: none; color: var(--text-muted); font-weight: 700; font-size: 0.85rem; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+  .tab.active { background: var(--bg-card); color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+  .card-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+  .card-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 12px; text-transform: uppercase; }
+  .dropzone { border: 2px dashed #3b4b41; border-radius: 16px; padding: 40px 20px; text-align: center; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; }
+  .dropzone:hover { border-color: var(--accent-lime); background: rgba(203, 240, 126, 0.02); }
+  .drop-icon { width: 48px; height: 48px; background: rgba(42, 90, 60, 0.5); border: 1px solid #2a5a3c; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--accent-lime); margin-bottom: 16px; }
+  .drop-text { font-size: 1rem; font-weight: 700; color: white; margin-bottom: 4px; }
+  .drop-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; }
+  .format-tags { display: flex; gap: 8px; justify-content: center; }
+  .format-tag { font-size: 0.7rem; border: 1px solid #3b4b41; padding: 4px 10px; border-radius: 20px; color: var(--text-muted); }
+  .url-area { display: none; }
+  .url-input-box { width: 100%; background: var(--bg-input); border: 1px solid #3b4b41; border-radius: 12px; padding: 16px; color: white; font-size: 0.9rem; outline: none; resize: none; min-height: 100px; margin-bottom: 12px; font-family: inherit; }
+  .url-input-box:focus { border-color: var(--accent-lime); }
+  .url-help { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+  .btn-convert { background: white; color: black; font-weight: 700; padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; float: right; margin-bottom: 10px; }
+  .speed-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 24px; }
+  @media (max-width: 400px) { .speed-grid { grid-template-columns: repeat(3, 1fr); } }
+  .speed-btn { background: var(--bg-input); border: 1px solid #3b4b41; color: white; padding: 12px 0; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+  .speed-btn.active { background: white; color: black; border-color: white; }
+  .asset-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-top: 8px; }
+  .btn-publish-large { width: 100%; background: #4a5c50; color: #a0b0a7; font-weight: 800; padding: 18px; border-radius: 12px; border: none; font-size: 1rem; cursor: not-allowed; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; transition: 0.2s; }
+  .btn-publish-large.ready { background: var(--accent-lime); color: #121c15; cursor: pointer; }
+  .btn-publish-large.ready:hover { transform: translateY(-2px); }
+  .btn-clear { width: 100%; background: transparent; border: 1px solid var(--border-color); color: var(--text-main); font-weight: 700; padding: 16px; border-radius: 12px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-clear:hover { background: var(--bg-card); }
+
+  /* ===== PAGE 3: LIBRARY (TAMBAHAN BARU) ===== */
+  .library-header { margin-bottom: 24px; }
+  .library-title { font-size: 2rem; font-weight: 800; color: white; margin-bottom: 4px; display: flex; align-items: center; gap: 12px; }
+  .library-badge { font-size: 0.7rem; background: var(--bg-card); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 20px; font-weight: 700; color: var(--text-muted); letter-spacing: 1px; }
+  .library-search-box { position: relative; margin-bottom: 24px; }
+  .library-search-box input { width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px 16px 16px 48px; color: white; font-size: 0.9rem; outline: none; }
+  .library-search-box input:focus { border-color: var(--accent-lime); }
+  .library-search-box::before { content: '🔍'; position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; opacity: 0.5; }
+  
+  .library-empty { background: var(--bg-card); border: 1px dashed var(--border-color); border-radius: 20px; padding: 60px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; }
+  .library-empty-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+  .library-empty-title { font-size: 1.2rem; font-weight: 700; color: white; margin-bottom: 8px; }
+  .library-empty-desc { font-size: 0.85rem; color: var(--text-muted); max-width: 300px; line-height: 1.5; margin-bottom: 24px; }
+  .btn-go-upload { background: var(--accent-lime); color: #121c15; font-weight: 800; font-size: 0.85rem; padding: 12px 24px; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+  .btn-go-upload:hover { transform: translateY(-2px); }
+</style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash"><div class="splash-text" id="splash-text">CELLO STUDIO</div></div>
+
+<!-- KONTEN UTAMA -->
+<div id="main-content">
+  <nav>
+    <div class="brand">CELLO<span style="color:var(--accent-lime)">.</span></div>
+    <div class="nav-right">
+      <div class="nav-profile">C</div>
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      
+      <!-- DROPDOWN MENU -->
+      <div class="dropdown" id="dropdownMenu">
+        <div class="dropdown-item active" onclick="switchPage('home')">🏠 Home</div>
+        <!-- Diubah agar mengarah ke halaman Library baru -->
+        <div class="dropdown-item" onclick="switchPage('library')">📚 Library</div>
+        <div class="dropdown-item" onclick="switchPage('upload')">🎵 Upload Music</div>
+        <div class="dropdown-item" onclick="alert('Fitur Settings segera hadir!')">⚙️ Settings</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    
+    <!-- ================= PAGE 1: HOME ================= -->
+    <div id="page-home" class="page-section active">
+      
+      <div class="breadcrumb">
+        <span style="font-weight:400;">WORKSPACE</span> / <span>OVERVIEW</span>
+      </div>
+
+      <div class="hero-banner">
+        <div class="hero-badge">CELLO / ROBLOX AUDIO STUDIO</div>
+        <div class="hero-title">Cello</div>
+        <p class="hero-desc">Satu studio untuk menyiapkan suara, lalu membawanya ke dunia Roblox.</p>
+        <div class="hero-buttons">
+          <button class="btn-primary" onclick="switchPage('upload')">⬆ Upload Audio</button>
+          <!-- Diubah agar mengarah ke halaman Library baru -->
+          <button class="btn-outline" onclick="switchPage('library')">Buka Library →</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🎵</div>
+          <div class="stat-value">29</div>
+          <div class="stat-label">TOTAL AUDIO</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">☁️</div>
+          <div class="stat-value">27</div>
+          <div class="stat-label">PUBLISHED</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💎</div>
+          <div class="stat-value" id="statusPaket">FREE</div>
+          <div class="stat-label">PAKET AKTIF</div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">Aktivitas terbaru</div>
+        <!-- Diubah agar mengarah ke halaman Library baru -->
+        <div class="section-link" onclick="switchPage('library')">Lihat Library →</div>
+      </div>
+      <div class="split-grid">
+        <div class="activity-list">
+          <div class="act-item">
+            <div class="act-info">
+              <div class="act-icon">🎵</div>
+              <div>
+                <div class="act-name">Toton Caribo "Ora Uru..."</div>
+                <div class="act-meta">ID: N/A • 2/11/2026</div>
+              </div>
+            </div>
+            <span class="badge-status status-fail">Gagal</span>
+          </div>
+          <div class="act-item">
+            <div class="act-info">
+              <div class="act-icon">🎵</div>
+              <div>
+                <div class="act-name">Toton Caribo "Ora Uru..."</div>
+                <div class="act-meta">ID: N/A • 2/11/2026</div>
+              </div>
+            </div>
+            <span class="badge-status status-fail">Gagal</span>
+          </div>
+          <div class="act-item">
+            <div class="act-info">
+              <div class="act-icon">🎵</div>
+              <div>
+                <div class="act-name">Toton Caribo "Ora Uru..."</div>
+                <div class="act-meta">ID: 77390331558790 • 2/11/2026</div>
+              </div>
+            </div>
+            <span class="badge-status status-ok">Published</span>
+          </div>
+        </div>
+
+        <div class="plan-card">
+          <div class="plan-label">AKUN KAMU</div>
+          <div class="plan-title" id="planTitle">Free Plan</div>
+          <div class="plan-desc" id="planDesc">9/10 publish per hari</div>
+          <button class="btn-upgrade" id="btnUpgrade" onclick="upgradePremium()">Upgrade Premium</button>
+        </div>
+      </div>
+
+      <div class="section-header" style="margin-top: 10px;">
+        <div class="section-title">Ruang kerja</div>
+      </div>
+      <div class="tools-grid">
+        <div class="tool-card" onclick="switchPage('upload')">
+          <div class="tool-icon">⬆</div>
+          <div class="tool-title">Upload Audio</div>
+          <div class="tool-desc">Convert & publish ke Roblox</div>
+        </div>
+        <!-- Diubah agar mengarah ke halaman Library baru -->
+        <div class="tool-card" onclick="switchPage('library')">
+          <div class="tool-icon">📁</div>
+          <div class="tool-title">Library</div>
+          <div class="tool-desc">Kelola audio tersimpan</div>
+        </div>
+        <div class="tool-card" onclick="alert('Fitur Spoofer segera hadir!')">
+          <div class="tool-icon">🔄</div>
+          <div class="tool-title">Spoofer</div>
+          <div class="tool-desc">Publish Animation ID jadi asset baru</div>
+        </div>
+        <div class="tool-card" onclick="alert('Fitur SkyBox segera hadir!')">
+          <div class="tool-icon">🌌</div>
+          <div class="tool-title">SkyBox 360°</div>
+          <div class="tool-desc">Panorama ke enam sisi</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PAGE 2: UPLOAD SOUND ================= -->
+    <div id="page-upload" class="page-section">
+      <div class="page-header">
+        <div class="page-title">Sound</div>
+        <p class="page-sub">Siapkan, konversi, dan publish audio ke Roblox.</p>
+      </div>
+
+      <div class="tabs-container">
+        <button class="tab active" id="tabFile" onclick="switchTab('file')">Upload file</button>
+        <button class="tab" id="tabUrl" onclick="switchTab('url')">YouTube URL</button>
+      </div>
+
+      <div id="contentFile" class="card-box">
+        <div class="dropzone" onclick="document.getElementById('fileInput').click()">
+          <div class="drop-icon">☁️</div>
+          <div class="drop-text" id="dropText">Drop file audio di sini</div>
+          <div class="drop-sub">atau klik untuk pilih file</div>
+          <div class="format-tags">
+            <span class="format-tag">MP3</span>
+            <span class="format-tag">WAV</span>
+            <span class="format-tag">OGG</span>
+            <span class="format-tag">FLAC</span>
+            <span class="format-tag">AAC</span>
+          </div>
+        </div>
+        <input type="file" id="fileInput" hidden onchange="fileSelected(this)">
+      </div>
+
+      <div id="contentUrl" class="card-box" style="display:none;">
+        <div class="card-label">URL YOUTUBE</div>
+        <textarea class="url-input-box" placeholder="Tempel 1 link YouTube untuk Free. Premium bisa sampai 5 link, satu per baris."></textarea>
+        <button class="btn-convert">Convert ke MP3</button>
+        <div style="clear:both;"></div>
+        <div class="url-help">Nama asset otomatis mengikuti judul YouTube dan tetap bisa kamu edit satu per satu. Preset kecepatan sama untuk seluruh batch. Hanya video yang kamu miliki atau punya izin untuk digunakan.</div>
+      </div>
+
+      <div class="card-box">
+        <div class="card-label">Pengaturan Upload</div>
+        <div style="font-size: 0.7rem; font-weight:700; color:var(--text-muted); margin-bottom: 8px;">KECEPATAN PLAYBACK</div>
+        <div class="speed-grid">
+          <button class="speed-btn">0.25×</button>
+          <button class="speed-btn">0.5×</button>
+          <button class="speed-btn">0.75×</button>
+          <button class="speed-btn active">1×</button>
+          <button class="speed-btn">1.25×</button>
+          <button class="speed-btn">1.5×</button>
+          <button class="speed-btn">1.75×</button>
+          <button class="speed-btn">2×</button>
+        </div>
+
+        <div class="card-label">NAMA ASSET ROBLOX</div>
+        <div class="asset-desc">Nama asset diatur satu per satu di daftar file setelah kamu memilih atau mengonversi audio. Preset kecepatan tetap sama untuk seluruh batch.</div>
+      </div>
+
+      <button class="btn-publish-large" id="publishBtn" onclick="publishAudio()">
+        ⬆ <span id="publishText">Upload & Publish ke Roblox</span>
+      </button>
+      <button class="btn-clear" onclick="clearAll()">
+        🗑️ Hapus Semua
+      </button>
+    </div>
+
+    <!-- ================= PAGE 3: LIBRARY (TAMBAHAN BARU) ================= -->
+    <div id="page-library" class="page-section">
+      <div class="library-header">
+        <div class="library-title">
+          Library
+          <span class="library-badge">0 AUDIO</span>
+        </div>
+        <p class="page-sub">Semua audio yang sudah disiapkan untuk Roblox.</p>
+      </div>
+
+      <!-- Kolom Pencarian -->
+      <div class="library-search-box">
+        <input type="text" placeholder="Cari audio..." disabled style="cursor: not-allowed; opacity: 0.7;">
+      </div>
+
+      <!-- Tampilan Kosong (Empty State) -->
+      <div class="library-empty">
+        <div class="library-empty-icon">🎵</div>
+        <div class="library-empty-title">Belum ada audio</div>
+        <div class="library-empty-desc">Semua audio yang berhasil kamu upload atau konversi akan muncul di sini.</div>
+        <button class="btn-go-upload" onclick="switchPage('upload')">
+          ⬆ Upload Audio Pertama
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ===== 1. ANIMASI SPLASH =====
+  window.addEventListener('load', () => {
+    setTimeout(() => document.getElementById('splash-text').classList.add('move-up-left'), 1000);
+    setTimeout(() => {
+      document.getElementById('splash').classList.add('hidden');
+      document.getElementById('main-content').classList.add('show');
+    }, 2200);
+  });
+
+  // ===== 2. MENU DROPDOWN =====
+  function toggleMenu() {
+    document.getElementById('dropdownMenu').classList.toggle('active');
+  }
+
+  document.addEventListener('click', function(event) {
+    const menu = document.getElementById('dropdownMenu');
+    const btn = document.querySelector('.menu-btn');
+    if (!menu.contains(event.target) && !btn.contains(event.target)) {
+      menu.classList.remove('active');
+    }
+  });
+
+  // ===== 3. NAVIGASI HALAMAN =====
+  function switchPage(pageName) {
+    document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+    document.getElementById('page-' + pageName).classList.add('active');
+    
+    // Mengatur status aktif pada dropdown menu
+    document.querySelectorAll('.dropdown-item').forEach(el => el.classList.remove('active'));
+    
+    // Logika untuk menandai menu yang aktif berdasarkan teksnya (Diperbarui untuk Library)
+    const menuItems = document.querySelectorAll('.dropdown-item');
+    menuItems.forEach(item => {
+      if(item.innerText.toLowerCase().includes(pageName) || 
+         (pageName === 'home' && item.innerText.includes('Home')) ||
+         (pageName === 'library' && item.innerText.includes('Library')) ||
+         (pageName === 'upload' && item.innerText.includes('Upload'))) {
+        item.classList.add('active');
+      }
+    });
+
+    document.getElementById('dropdownMenu').classList.remove('active');
+    window.scrollTo(0, 0);
+  }
+
+  // ===== 4. LOGIKA UPGRADE PREMIUM =====
+  let isPremium = false;
+  function upgradePremium() {
+    if(!isPremium) {
+      isPremium = true;
+      document.getElementById('planTitle').innerText = 'Premium Plan';
+      document.getElementById('planTitle').style.color = 'var(--accent-lime)';
+      document.getElementById('planDesc').innerText = 'Unlimited publish harian!';
+      document.getElementById('statusPaket').innerText = 'PREMIUM';
+      document.getElementById('statusPaket').style.color = 'var(--accent-lime)';
+      document.getElementById('btnUpgrade').innerText = '✅ Premium Aktif';
+      document.getElementById('btnUpgrade').style.backgroundColor = 'var(--accent-lime)';
+      alert('🎉 Selamat! Kamu sekarang adalah member Premium (Simulasi).');
+    } else {
+      alert('Kamu sudah Premium!');
+    }
+  }
+
+  // ===== 5. LOGIKA TAB UPLOAD =====
+  let currentTab = 'file';
+  function switchTab(tab) {
+    currentTab = tab;
+    document.getElementById('tabFile').classList.remove('active');
+    document.getElementById('tabUrl').classList.remove('active');
+    document.getElementById('contentFile').style.display = 'none';
+    document.getElementById('contentUrl').style.display = 'none';
+
+    if (tab === 'file') {
+      document.getElementById('tabFile').classList.add('active');
+      document.getElementById('contentFile').style.display = 'block';
+      document.getElementById('publishText').innerText = 'Upload & Publish ke Roblox';
+    } else {
+      document.getElementById('tabUrl').classList.add('active');
+      document.getElementById('contentUrl').style.display = 'block';
+      document.getElementById('publishText').innerText = 'Convert & Publish ke Roblox';
+    }
+  }
+
+  // ===== 6. LOGIKA FILE & TOMBOL PUBLISH =====
+  let fileReady = false;
+  function fileSelected(input) {
+    if (input.files && input.files.length > 0) {
+      document.getElementById('dropText').innerHTML = `✅ <b>${input.files[0].name}</b>`;
+      fileReady = true;
+      document.getElementById('publishBtn').classList.add('ready');
+    }
+  }
+
+  function publishAudio() {
+    const btn = document.getElementById('publishBtn');
+    if (currentTab === 'file' && !fileReady) return alert('Pilih file audio terlebih dahulu!');
+    if (currentTab === 'url' && !document.querySelector('.url-input-box').value) return alert('Masukkan URL YouTube terlebih dahulu!');
+
+    btn.classList.remove('ready');
+    document.getElementById('publishText').innerText = 'Sedang Memproses...';
+    
+    setTimeout(() => {
+      alert('✅ Sukses! Audio berhasil diproses. (Simulasi)');
+      document.getElementById('publishText').innerText = 'Upload & Publish ke Roblox';
+    }, 1500);
+  }
+
+  function clearAll() {
+    document.getElementById('fileInput').value = '';
+    document.getElementById('dropText').innerText = 'Drop file audio di sini';
+    document.querySelector('.url-input-box').value = '';
+    fileReady = false;
+    document.getElementById('publishBtn').classList.remove('ready');
+    alert('Form berhasil dibersihkan.');
+  }
+
+  // ===== 7. PILIHAN KECEPATAN =====
+  document.querySelectorAll('.speed-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
