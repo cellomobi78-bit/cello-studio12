@@ -135,6 +135,183 @@
   .btn-clear { width: 100%; background: transparent; border: 1px solid var(--border-color); color: var(--text-main); font-weight: 700; padding: 16px; border-radius: 12px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .btn-clear:hover { background: var(--bg-card); }
 
+  /* ===== PAGE 3: LIBRARY ===== */
+  .library-header { margin-bottom: 24px; }
+  .library-title { font-size: 2rem; font-weight: 800; color: white; margin-bottom: 4px; display: flex; align-items: center; gap: 12px; }
+  .library-badge { font-size: 0.7rem; background: var(--bg-card); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 20px; font-weight: 700; color: var(--text-muted); letter-spacing: 1px; }
+  .library-search-box { position: relative; margin-bottom: 24px; }
+  .library-search-box input { width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px 16px 16px 48px; color: white; font-size: 0.9rem; outline: none; }
+  .library-search-box input:focus { border-color: var(--accent-lime); }
+  .library-search-box::before { content: '🔍'; position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; opacity: 0.5; }
+  
+  .library-empty { background: var(--bg-card); border: 1px dashed var(--border-color); border-radius: 20px; padding: 60px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; }
+  .library-empty-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+  .library-empty-title { font-size: 1.2rem; font-weight: 700; color: white; margin-bottom: 8px; }
+  .library-empty-desc { font-size: 0.85rem; color: var(--text-muted); max-width: 300px; line-height: 1.5; margin-bottom: 24px; }
+  .btn-go-upload { background: var(--accent-lime); color: #121c15; font-weight: 800; font-size: 0.85rem; padding: 12px 24px; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+  .btn-go-upload:hover { transform: translateY(-2px); }
+</style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash"><div class="splash-text" id="splash-text">CELLO STUDIO</div></div>
+
+<!-- KONTEN UTAMA -->
+<div id="main-content">
+  <nav>
+    <div class="brand">CELLO<span style="color:var(--accent-lime)">.</span></div>
+    <div class="nav-right">
+      <div class="nav-profile">C</div>
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      
+      <!-- DROPDOWN MENU -->
+      <div class="dropdown" id="dropdownMenu">
+        <div class="dropdown-item active" onclick="switchPage('home')">🏠 Home</div>
+        <div class="dropdown-item" onclick="switchPage('library')">📚 Library</div>
+        <div class="dropdown-item" onclick="switchPage('upload')">🎵 Upload Music</div>
+        <div class="dropdown-item" onclick="alert('Fitur Settings segera hadir!')">⚙️ Settings</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    
+    <!-- ================= PAGE 1: HOME ================= -->
+    <div id="page-home" class="page-section active">
+      
+      <div class="breadcrumb">
+        <span style="font-weight:400;">WORKSPACE</span> / <span>OVERVIEW</span>
+      </div>
+
+      <div class="hero-banner">
+        <div class="hero-badge">CELLO / ROBLOX AUDIO STUDIO</div>
+        <div class="hero-title">Cello</div>
+        <p class="hero-desc">Satu studio untuk menyiapkan suara, lalu membawanya ke dunia Roblox.</p>
+        <div class="hero-buttons">
+          <button class="btn-primary" onclick="switchPage('upload')">⬆ Upload Audio</button>
+          <button class="btn-outline" onclick="switchPage('library')">Buka Library →</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🎵</div>
+          <div class="stat-value">29</div>
+          <div class="stat-label">TOTAL AUDIO</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">☁️</div>
+          <div class="stat-value">27</div>
+          <div class="stat-label">PUBLISHED</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💎</div>
+          <div class="stat-value" id="statusPaket">FREE</div>
+          <div class="stat-label">PAKET AKTIF</div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">Aktivitas terbaru</div>
+        <div class="section-link" onclick="switchPage('library')">Lihat Library →</div>
+      </div>
+      <div class="split-grid">
+        <div class="activity-list">
+          <div class="act-item">
+            <div class="act-info">
+              <div class="act-icon">🎵</div>
+              <div>
+                <div class="act-name">Toton Caribo "Ora Uru..."</div>
+                <div class="act-meta">ID: N/A • 2/11/2026</div>
+              </div>
+            </div>
+            <span class="badge-status status-fail">Gagal</span>
+          </div>
+          <div class="act-item">
+            <div class="act-info">
+              <div class="act-icon">🎵</div>
+              <div>
+                <div class="act-name">Toton Caribo "Ora Uru..."</div>
+                <div class="act-meta">ID: N/A • 2/11/2026</div>
+              </div>
+            </div>
+            <span class="badge-status status-fail">Gagal</span>
+          </div>
+          <div class="act-item">
+            <div class="act-info">
+              <div class="act-icon">🎵</div>
+              <div>
+                <div class="act-name">Toton Caribo "Ora Uru..."</div>
+                <div class="act-meta">ID: 77390331558790 • 2/11/2026</div>
+              </div>
+            </div>
+            <span class="badge-status status-ok">Published</span>
+          </div>
+        </div>
+
+        <div class="plan-card">
+          <div class="plan-label">AKUN KAMU</div>
+          <div class="plan-title" id="planTitle">Free Plan</div>
+          <div class="plan-desc" id="planDesc">9/10 publish per hari</div>
+          <button class="btn-upgrade" id="btnUpgrade" onclick="upgradePremium()">Upgrade Premium</button>
+        </div>
+      </div>
+
+      <div class="section-header" style="margin-top: 10px;">
+        <div class="section-title">Ruang kerja</div>
+      </div>
+      <div class="tools-grid">
+        <div class="tool-card" onclick="switchPage('upload')">
+          <div class="tool-icon">⬆</div>
+          <div class="tool-title">Upload Audio</div>
+          <div class="tool-desc">Convert & publish ke Roblox</div>
+        </div>
+        <div class="tool-card" onclick="switchPage('library')">
+          <div class="tool-icon">📁</div>
+          <div class="tool-title">Library</div>
+          <div class="tool-desc">Kelola audio tersimpan</div>
+        </div>
+        <div class="tool-card" onclick="alert('Fitur Spoofer segera hadir!')">
+          <div class="tool-icon">🔄</div>
+          <div class="tool-title">Spoofer</div>
+          <div class="tool-desc">Publish Animation ID jadi asset baru</div>
+        </div>
+        <div class="tool-card" onclick="alert('Fitur SkyBox segera hadir!')">
+          <div class="tool-icon">🌌</div>
+          <div class="tool-title">SkyBox 360°</div>
+          <div class="tool-desc">Panorama ke enam sisi</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PAGE 2: UPLOAD SOUND ================= -->
+    <div id="page-upload" class="page-section">
+      <div class="page-header">
+        <div class="page-title">Sound</div>
+        <p class="page-sub">Siapkan, konversi, dan publish audio ke Roblox.</ion: column; align-items: center; }
+  .dropzone:hover { border-color: var(--accent-lime); background: rgba(203, 240, 126, 0.02); }
+  .drop-icon { width: 48px; height: 48px; background: rgba(42, 90, 60, 0.5); border: 1px solid #2a5a3c; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--accent-lime); margin-bottom: 16px; }
+  .drop-text { font-size: 1rem; font-weight: 700; color: white; margin-bottom: 4px; }
+  .drop-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; }
+  .format-tags { display: flex; gap: 8px; justify-content: center; }
+  .format-tag { font-size: 0.7rem; border: 1px solid #3b4b41; padding: 4px 10px; border-radius: 20px; color: var(--text-muted); }
+  .url-area { display: none; }
+  .url-input-box { width: 100%; background: var(--bg-input); border: 1px solid #3b4b41; border-radius: 12px; padding: 16px; color: white; font-size: 0.9rem; outline: none; resize: none; min-height: 100px; margin-bottom: 12px; font-family: inherit; }
+  .url-input-box:focus { border-color: var(--accent-lime); }
+  .url-help { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+  .btn-convert { background: white; color: black; font-weight: 700; padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; float: right; margin-bottom: 10px; }
+  .speed-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 24px; }
+  @media (max-width: 400px) { .speed-grid { grid-template-columns: repeat(3, 1fr); } }
+  .speed-btn { background: var(--bg-input); border: 1px solid #3b4b41; color: white; padding: 12px 0; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+  .speed-btn.active { background: white; color: black; border-color: white; }
+  .asset-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-top: 8px; }
+  .btn-publish-large { width: 100%; background: #4a5c50; color: #a0b0a7; font-weight: 800; padding: 18px; border-radius: 12px; border: none; font-size: 1rem; cursor: not-allowed; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; transition: 0.2s; }
+  .btn-publish-large.ready { background: var(--accent-lime); color: #121c15; cursor: pointer; }
+  .btn-publish-large.ready:hover { transform: translateY(-2px); }
+  .btn-clear { width: 100%; background: transparent; border: 1px solid var(--border-color); color: var(--text-main); font-weight: 700; padding: 16px; border-radius: 12px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-clear:hover { background: var(--bg-card); }
+
   /* ===== PAGE 3: LIBRARY (TAMBAHAN BARU) ===== */
   .library-header { margin-bottom: 24px; }
   .library-title { font-size: 2rem; font-weight: 800; color: white; margin-bottom: 4px; display: flex; align-items: center; gap: 12px; }
